@@ -1,8 +1,8 @@
 import React from "react";
-import "./Modal.css"; // Stil faylını da əlavə edəcəyik.
+import "./Modal.css"; 
 
 const Modal = ({ isOpen, onClose, onSubmit, newUser, setNewUser }) => {
-  if (!isOpen) return null; // Eğer modal açıq deyilsə, heç bir şey göstərmə
+  if (!isOpen) return null; 
 
   return (
     <div className="modal-overlay">
@@ -14,7 +14,7 @@ const Modal = ({ isOpen, onClose, onSubmit, newUser, setNewUser }) => {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            onSubmit(); // Submit işlemi
+            onSubmit(); 
           }}
         >
           <input

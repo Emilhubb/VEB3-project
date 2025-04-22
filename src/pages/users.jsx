@@ -25,7 +25,7 @@ const Users = () => {
   }, [dispatch]);
 
   const handleAddUserClick = () => {
-    setIsModalOpen(true); // Modalı açır
+    setIsModalOpen(true); 
   };
 
   const handleInputChange = (e) => {
@@ -39,11 +39,11 @@ const Users = () => {
   const handleSubmit = () => {
     const userWithId = {
       ...newUser,
-      id: Math.floor(Math.random() * 10000), // Unikal ID
+      id: Math.floor(Math.random() * 10000),
     };
     dispatch(addUser(userWithId));
     setIsModalOpen(false); // Modalı bağla
-    setNewUser({ name: "", username: "", website: "" }); // Formu təmizlə
+    setNewUser({ name: "", username: "", website: "" }); 
   };
 
   return (
