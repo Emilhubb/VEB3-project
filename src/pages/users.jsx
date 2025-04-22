@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setUsers, addUser } from "../users-with-toolkit.slice";
+import { setUsers, addUser, editUser } from "../users-with-toolkit.slice"; // editUser əlavə et
 import Modal from "../modals/modal";
 
 const Users = () => {
@@ -9,6 +9,8 @@ const Users = () => {
 
   const BASE_URL = `https://jsonplaceholder.typicode.com/users`;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+
   const [newUser, setNewUser] = useState({
     name: "",
     username: "",
@@ -25,7 +27,15 @@ const Users = () => {
   }, [dispatch]);
 
   const handleAddUserClick = () => {
-    setIsModalOpen(true); 
+    setIsModalOpen(true);
+    setNewUser({ name: "", username: "", website: "" }); // Formu boş aç
+    setIsEditing(false); // Add mode
+  };
+
+  const handleEditUserClick = (user) => {
+    setIsModalOpen(true);
+    setNewUser(user); // Dəyişdiriləcək user
+    setIsEditing(true); // Edit mode
   };
 
   const handleInputChange = (e) => {
@@ -37,13 +47,18 @@ const Users = () => {
   };
 
   const handleSubmit = () => {
-    const userWithId = {
-      ...newUser,
-      id: Math.floor(Math.random() * 10000),
-    };
-    dispatch(addUser(userWithId));
+    if (isEditing) {
+      dispatch(editUser(newUser)); // Əgər editingdirsə update et
+    } else {
+      const userWithId = {
+        ...newUser,
+        id: Math.floor(Math.random() * 10000),
+      };
+      dispatch(addUser(userWithId)); // Əks halda yeni əlavə et
+    }
     setIsModalOpen(false); // Modalı bağla
-    setNewUser({ name: "", username: "", website: "" }); 
+    setNewUser({ name: "", username: "", website: "" }); // Formu sıfırla
+    setIsEditing(false); // Edit modunu sıfırla
   };
 
   return (
@@ -57,6 +72,7 @@ const Users = () => {
             <h2>{user.name}</h2>
             <p>{user.username}</p>
             <p>{user.website}</p>
+            <button onClick={() => handleEditUserClick(user)}>Edit User</button>
             <hr />
           </div>
         );
