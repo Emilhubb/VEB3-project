@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setUsers } from "../users-with-toolkit.slice";
+import { setUsers, addUser } from "../users-with-toolkit.slice";
+import Modal from "../modals/modal";
 
 const Users = () => {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.users.users);
 
   const BASE_URL = `https://jsonplaceholder.typicode.com/users`;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newUser, setNewUser] = useState({
+    name: "",
+    username: "",
+    website: "",
+  });
 
   useEffect(() => {
     const getUsers = async () => {
@@ -16,9 +23,34 @@ const Users = () => {
     };
     getUsers();
   }, [dispatch]);
+
+  const handleAddUserClick = () => {
+    setIsModalOpen(true); // Modalı açır
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewUser((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = () => {
+    const userWithId = {
+      ...newUser,
+      id: Math.floor(Math.random() * 10000), // Unikal ID
+    };
+    dispatch(addUser(userWithId));
+    setIsModalOpen(false); // Modalı bağla
+    setNewUser({ name: "", username: "", website: "" }); // Formu təmizlə
+  };
+
   return (
     <>
       <h1>Users</h1>
+      <button onClick={handleAddUserClick}>Add User</button>
+
       {users.map((user) => {
         return (
           <div key={user.id}>
@@ -29,6 +61,16 @@ const Users = () => {
           </div>
         );
       })}
+
+      {isModalOpen && (
+        <Modal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={handleSubmit}
+          newUser={newUser}
+          setNewUser={setNewUser}
+        />
+      )}
     </>
   );
 };
