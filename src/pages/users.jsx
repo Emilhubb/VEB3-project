@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setUsers, addUser, editUser } from "../users-with-toolkit.slice"; // editUser əlavə et
+import { setUsers, addUser, editUser, deleteUser } from "../users-with-toolkit.slice";
 import Modal from "../modals/modal";
 
 const Users = () => {
@@ -10,7 +10,6 @@ const Users = () => {
   const BASE_URL = `https://jsonplaceholder.typicode.com/users`;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-
   const [newUser, setNewUser] = useState({
     name: "",
     username: "",
@@ -28,14 +27,18 @@ const Users = () => {
 
   const handleAddUserClick = () => {
     setIsModalOpen(true);
-    setNewUser({ name: "", username: "", website: "" }); // Formu boş aç
-    setIsEditing(false); // Add mode
+    setNewUser({ name: "", username: "", website: "" });
+    setIsEditing(false);
   };
 
   const handleEditUserClick = (user) => {
     setIsModalOpen(true);
-    setNewUser(user); // Dəyişdiriləcək user
-    setIsEditing(true); // Edit mode
+    setNewUser(user);
+    setIsEditing(true);
+  };
+
+  const handleDeleteUser = (id) => {
+    dispatch(deleteUser(id));
   };
 
   const handleInputChange = (e) => {
@@ -48,17 +51,17 @@ const Users = () => {
 
   const handleSubmit = () => {
     if (isEditing) {
-      dispatch(editUser(newUser)); // Əgər editingdirsə update et
+      dispatch(editUser(newUser));
     } else {
       const userWithId = {
         ...newUser,
         id: Math.floor(Math.random() * 10000),
       };
-      dispatch(addUser(userWithId)); // Əks halda yeni əlavə et
+      dispatch(addUser(userWithId));
     }
-    setIsModalOpen(false); // Modalı bağla
-    setNewUser({ name: "", username: "", website: "" }); // Formu sıfırla
-    setIsEditing(false); // Edit modunu sıfırla
+    setIsModalOpen(false);
+    setNewUser({ name: "", username: "", website: "" });
+    setIsEditing(false);
   };
 
   return (
@@ -73,6 +76,7 @@ const Users = () => {
             <p>{user.username}</p>
             <p>{user.website}</p>
             <button onClick={() => handleEditUserClick(user)}>Edit User</button>
+            <button onClick={() => handleDeleteUser(user.id)}>Delete User</button>
             <hr />
           </div>
         );

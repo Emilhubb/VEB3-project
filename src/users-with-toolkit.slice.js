@@ -22,7 +22,11 @@ const usersWithToolkit = createSlice({
         state.users[index] = action.payload;
       }
     },
+    deleteUser: (state, action) => {
+        state.users = state.users.filter(user => user.id !== action.payload);
+      },
+      
   },
 });
-export const { setUsers, addUser, editUser } = usersWithToolkit.actions;
+export const { setUsers, addUser, editUser, deleteUser } = usersWithToolkit.actions;
 export default usersWithToolkit.reducer;
