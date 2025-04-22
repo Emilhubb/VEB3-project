@@ -38,8 +38,12 @@ const Users = () => {
   };
 
   const handleDeleteUser = (id) => {
-    dispatch(deleteUser(id));
+    const isConfirmed = window.confirm("Are you sure you want to delete this user?");
+    if (isConfirmed) {
+      dispatch(deleteUser(id));
+    }
   };
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
