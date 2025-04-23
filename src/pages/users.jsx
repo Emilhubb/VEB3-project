@@ -44,15 +44,6 @@ const Users = () => {
     }
   };
   
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewUser((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
   const handleSubmit = () => {
     if (isEditing) {
       dispatch(editUser(newUser));
